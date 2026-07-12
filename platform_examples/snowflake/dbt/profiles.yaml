@@ -1,0 +1,15 @@
+# dbt connects to Snowflake via the dbt-snowflake adapter - the adapter dbt
+# was originally built around, and the simplest of the three to set up.
+
+client_project:
+  target: dev
+  outputs:
+    dev:
+      type: snowflake
+      account: ${DBT_SNOWFLAKE_ACCOUNT}
+      user: ${DBT_SNOWFLAKE_USER}
+      password: ${DBT_SNOWFLAKE_PASSWORD}
+      role: ${DBT_SNOWFLAKE_ROLE}
+      database: raw
+      warehouse: ${DBT_SNOWFLAKE_WAREHOUSE}
+      schema: dq_dev

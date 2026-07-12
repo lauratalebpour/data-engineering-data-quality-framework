@@ -1,0 +1,25 @@
+version: 2
+
+models:
+  - name: stg_customers
+    description: "Staging model for customer records. Maps to patterns/uniqueness/primary-key-integrity-check.md"
+    columns:
+      - name: customer_id
+        description: "Primary key. Must be unique and non-null — see Primary Key Integrity Check pattern."
+        tests:
+          - unique
+          - not_null
+          - row_count_reconciliation:
+              compare_model: "{{ source('raw', 'customers') }}"
+              tolerance_pct: 0
+
+      - name: email
+        description: "Should always be present — see Null / Mandatory Field Check pattern."
+        tests:
+          - not_null
+
+      - name: country_code
+        description: "Must match a known reference list — see Reference Data Validation pattern."
+        tests:
+          - accepted_values:
+              values: ['GB', 'US', 'FR', 'DE', 'IT', 'ES']

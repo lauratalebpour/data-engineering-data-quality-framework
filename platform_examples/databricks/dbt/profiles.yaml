@@ -1,0 +1,14 @@
+# dbt connects to Databricks via the dbt-databricks adapter, targeting a SQL
+# warehouse or all-purpose cluster - the most natural fit of the three
+# platforms, since dbt compiles to standard SQL Databricks already understands.
+
+client_project:
+  target: dev
+  outputs:
+    dev:
+      type: databricks
+      catalog: raw
+      schema: dq_dev
+      host: ${DBT_DATABRICKS_HOST}
+      http_path: ${DBT_DATABRICKS_HTTP_PATH}
+      token: ${DBT_DATABRICKS_TOKEN}

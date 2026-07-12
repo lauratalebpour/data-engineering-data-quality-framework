@@ -1,0 +1,26 @@
+checks for customers:
+
+  # Primary Key Integrity Check — patterns/uniqueness/primary-key-integrity-check.md
+  - missing_count(customer_id) = 0:
+      name: "customer_id must never be null"
+  - duplicate_count(customer_id) = 0:
+      name: "customer_id must be unique"
+
+  # Null / Mandatory Field Check — patterns/completeness/null-mandatory-field-check.md
+  - missing_count(email) = 0:
+      name: "email must never be null"
+
+  # Reference Data Validation — patterns/accuracy/reference-data-validation.md
+  - invalid_count(country_code) = 0:
+      valid values: ['GB', 'US', 'FR', 'DE', 'IT', 'ES']
+      name: "country_code must match known reference list"
+
+  # Freshness SLA Check — patterns/timeliness/freshness-sla-check.md
+  - freshness(created_at) < 24h:
+      name: "customer records must be no more than 24 hours stale"
+
+  # row_count_reconciliation - Row count reconciliation — patterns/completeness/row-count-reconciliation.md
+      row_count_reconciliation query: |
+        SELECT
+          (SELECT COUNT(*) FROM raw.customers) AS source_count,
+          (SELECT COUNT(*) FROM customers) AS target_count

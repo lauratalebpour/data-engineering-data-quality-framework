@@ -1,0 +1,38 @@
+# Pattern: Duplicate Detection
+
+**Dimension:** Uniqueness
+
+## The problem
+The same real-world entity can end up recorded more than once — through repeated
+imports, manual re-entry, or a failed deduplication step upstream. Duplicates
+inflate counts, skew aggregations, and can cause a customer or transaction to be
+double-counted in downstream reporting.
+
+## When to use it
+- On any table where each row is expected to represent a unique real-world entity
+  or event
+- After any merge, union, or re-run of a load process, where accidental
+  reprocessing is a common cause of duplication
+
+## How it works
+1. Define what "duplicate" means for this entity — an exact match on a primary key,
+   or a near-match on a combination of business fields (name + date of birth, for
+   instance, when no reliable ID exists)
+2. Run a grouping/counting check on the defined key(s); any group with more than
+   one row is a duplicate candidate
+3. Decide handling: hard block, deduplicate automatically (keep latest/first), or
+   flag for manual review — this decision should be agreed with the client, not
+   assumed
+4. Log the duplicate rate over time to catch upstream process regressions
+
+## What "good" looks like
+- Zero unexpected duplicates on true primary-key fields
+- A documented, agreed deduplication rule for fuzzy-match cases, applied
+  consistently rather than case-by-case
+
+## Known limitations
+- Fuzzy/business-key duplicate detection can produce false positives (two different
+  people who happen to share a name and birth date) — treat these as candidates for
+  review, not automatic fact
+- Doesn't catch duplicates that differ due to formatting inconsistency unless
+  combined with a normalization step first

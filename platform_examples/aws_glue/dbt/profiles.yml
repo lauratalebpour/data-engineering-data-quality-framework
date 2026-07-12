@@ -1,0 +1,18 @@
+# dbt connects to AWS Glue via the dbt-glue adapter (community-maintained,
+# AWS-backed), targeting Glue interactive sessions or Athena rather than
+# running inside a Glue ETL job directly - different integration shape to
+# how Soda embeds inside glue_job.py in this same folder.
+
+client_project:
+  target: dev
+  outputs:
+    dev:
+      type: glue
+      role_arn: ${DBT_GLUE_ROLE_ARN}
+      region: ${DBT_GLUE_REGION}
+      workers: 2
+      worker_type: G.1X
+      schema: "dq_dev"
+      database: "raw"
+      session_provisioning_timeout_in_seconds: 120
+      location: "s3://client-bucket/dbt-glue-temp/"

@@ -1,0 +1,8 @@
+data_source customers_source:
+  type: postgres
+  host: ${SODA_DB_HOST}
+  port: ${SODA_DB_PORT}
+  username: ${SODA_DB_USERNAME}
+  password: ${SODA_DB_PASSWORD}
+  database: ${SODA_DB_NAME}
+  schema: public

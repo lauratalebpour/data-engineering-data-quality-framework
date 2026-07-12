@@ -1,0 +1,13 @@
+# Unlike examples/aws_glue and examples/databricks (which connect Soda via a
+# Spark session), Snowflake uses the warehouse-connection method - same style
+# as soda/audits/configuration.yml, adapted for Snowflake's connection fields.
+
+data_source customers_source:
+  type: snowflake
+  username: ${SODA_SNOWFLAKE_USERNAME}
+  password: ${SODA_SNOWFLAKE_PASSWORD}
+  account: ${SODA_SNOWFLAKE_ACCOUNT}
+  database: ${SODA_SNOWFLAKE_DATABASE}
+  schema: ${SODA_SNOWFLAKE_SCHEMA}
+  warehouse: ${SODA_SNOWFLAKE_WAREHOUSE}
+  role: ${SODA_SNOWFLAKE_ROLE}

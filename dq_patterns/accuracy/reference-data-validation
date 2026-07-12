@@ -1,0 +1,36 @@
+# Pattern: Reference Data Validation
+
+**Dimension:** Accuracy
+
+## The problem
+Fields that should map to a known, authoritative reference set (country codes,
+product categories, currency codes) can drift — new values appear that don't exist
+in the reference list, often from typos, upstream system changes, or manual entry.
+These "orphan" values are usually a sign the data no longer accurately reflects
+reality.
+
+## When to use it
+- Any field with a defined, finite set of valid values maintained outside the
+  pipeline (a reference/lookup table, an external standard like ISO country codes)
+- Especially useful after a source system change or new data feed onboarding,
+  where drift is most likely to first appear
+
+## How it works
+1. Identify the authoritative reference set for the field (a lookup table, an
+   external standard, or a client-provided list)
+2. Compare every value in the field against the reference set
+3. Flag any value that doesn't exist in the reference set
+4. Decide handling: hard fail (block the pipeline), soft fail (flag and continue),
+   or quarantine (route unmatched records to a review table)
+
+## What "good" looks like
+- 100% of values match the reference set, or unmatched values are explicitly
+  triaged rather than silently passed through
+- The reference set itself is version-controlled and dated, so you can tell if
+  a failure is due to bad data or a stale reference list
+
+## Known limitations
+- Only as good as the reference set — if the reference data itself is outdated,
+  this check will produce false failures
+- Doesn't catch values that are technically valid but contextually wrong
+  (e.g. a real country code that's still the wrong country for this record)
